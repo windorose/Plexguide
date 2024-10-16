@@ -8,8 +8,9 @@ port_two=8266
 server_ip=0.0.0.0
 time_zone=America/New_York
 appdata_path=/pg/appdata/tdarr_server
-media_path=/pg/media
+media_path=/mnt/30/media
 transcode_cache_path=/pg/transcode/tdarr_server
+download_path=/mnt/15/download
 node_name=InternalNode
 internal_node=true
 ffmpeg_version=6
@@ -62,6 +63,7 @@ EOF
       - ${appdata_path}/logs:/app/logs
       - ${media_path}:/media
       - ${transcode_cache_path}:/temp
+      - ${download_path}:/download
 EOF
 
     # Check if Intel graphics devices exist
