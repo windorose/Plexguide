@@ -7,7 +7,7 @@ port_number=8989
 time_zone=America/New_York
 appdata_path=/pg/appdata/sonarr
 tv_path=/mnt/30/media/tv
-media_path=/mnt/30/media
+medi_path=/mnt/30/media
 tv-anime_path=/mnt/30/media/tv-anime
 clientdownload_path=/mnt/15/download
 version_tag=latest
@@ -31,7 +31,7 @@ services:
       - ${appdata_path}:/config
       - ${tv_path}:/tv
       - ${tv-anime_path}:/tv-anime
-      - ${media_path}:/media
+      - ${medi_path}:/medi
       - ${clientdownload_path}:/downloads
     ports:
       - "${expose}${port_number}:8989"
