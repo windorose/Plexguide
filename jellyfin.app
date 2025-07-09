@@ -76,11 +76,14 @@ EOF
       - ${expose}${port_number}:8096
     restart: unless-stopped
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.${app_name}.rule=Host("${app_name}.${traefik_domain}")'
-      - 'traefik.http.routers.${app_name}.entrypoints=websecure'
-      - 'traefik.http.routers.${app_name}.tls.certresolver=mytlschallenge'
-      - 'traefik.http.services.${app_name}.loadbalancer.server.port=${port_number}'
+      - "traefik.enable=true"
+      - "traefik.http.routers.jellyfin.rule=Host(`jl.bouzidi.ovh`)"
+      - "traefik.http.routers.jellyfin.entrypoints=websecure"
+      - "traefik.http.routers.jellyfin.tls.certresolver=mytlschallenge"
+      - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
+      - "traefik.http.routers.jellyfin.middlewares=jellyfin-headers"
+      - "traefik.http.middlewares.jellyfin-headers.headers.customRequestHeaders.X-Forwarded-Proto=https"
+      - "traefik.http.middlewares.jellyfin-headers.headers.customRequestHeaders.X-Forwarded-Host=jl.bouzidi.ovh"
     networks:
       - plexguide
 
