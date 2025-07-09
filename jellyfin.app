@@ -8,7 +8,7 @@ time_zone=America/New_York
 appdata_path=/pg/appdata/jellyfin
 movies_path=/mnt/30/media/movies
 tv_path=/mnt/30/media/tv
-jf_serverurl=1.1.1.1
+jf_serverurl=https://jl.bouzidi.ovh
 version_tag=latest
 expose=
 nvidia_driver=all
@@ -17,6 +17,9 @@ nvidia_graphics=all
 extra_path1=/mnt/30/media
 extra_path2=/mnt/15
 extra_path3=/mnt/ntfs
+extra_path4=/mnt/8t
+extra_path5=/mnt/docu
+extra_path6=/mnt/tdrive
 }
 
 
@@ -26,7 +29,7 @@ deploy_container() {
 
 # Create Docker Compose YAML configuration
 create_docker_compose() {
-    cat << EOF > /pg/ymals/${app_name}/docker-compose.yml
+    cat << EOF > /pg/ymals/jellyfin/docker-compose.yml
 services:
   ${app_name}:
     image: lscr.io/linuxserver/jellyfin:${version_tag}
@@ -35,7 +38,7 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=${time_zone}
-      - JELLYFIN_PublishedServerUrl=${jf_serverurl}
+      - JELLYFIN_PublishedServerUrl=https://jl.bouzidi.ovh
 EOF
 
     # Check if NVIDIA devices exist
@@ -47,7 +50,7 @@ EOF
 EOF
     fi
 
-    cat << EOF >> /pg/ymals/${app_name}/docker-compose.yml
+    cat << EOF >> /pg/ymals/jellyfin/docker-compose.yml
     volumes:
       - ${appdata_path}:/config
       - ${tv_path}:/data/tvshows
@@ -55,6 +58,9 @@ EOF
       - ${extra_path1}:/data-30
       - ${extra_path2}:/data-15
       - ${extra_path3}:/data-ntfs
+      - ${extra_path4}:/8t
+      - ${extra_path5}:/docu5
+      - ${extra_path6}:/tdrive
 EOF
 
     # Check if Intel graphics devices exist
