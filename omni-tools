@@ -3,7 +3,7 @@
 # ================================ DEFAULT VALUES ================================ #
 
 default_variables() {
-port_number=8444
+port_number=7474
 time_zone=Africa/Algiers
 appdata_path=/pg/appdata/omni-tools
 version_tag=latest
