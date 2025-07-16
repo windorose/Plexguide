@@ -17,7 +17,7 @@ create_docker_compose() {
     cat << EOF > /pg/ymals/${app_name}/docker-compose.yml
 services:
   ${app_name}:
-    image: lscr.io/iib0011/omni-tools:${version_tag}
+    image: iib0011/omni-tools:${version_tag}
     container_name: ${app_name}
     environment:
       - PUID=1000
