@@ -3,35 +3,23 @@
 # ================================ DEFAULT VALUES ================================ #
 
 default_variables() {
-# -- Nom de l'application
-app_name=jellystat
-
-# -- Configuration réseau
-host_port=8181
-internal_port=3000 # Port interne du conteneur jellystat
-traefik_domain=bouzidi.ovh # Domaine de base
-
-# -- Configuration de l'application
-jellystat_version=latest
-postgres_version=15
-time_zone=Africa/Algiers
-appdata_path=/pg/appdata/jellystat # Chemin de base pour les données
-jwt_secret=a4d835678237414cb744b388943c0ab5 # Secret JWT pour Jellystat
-
-# -- Identifiants de la base de données
-postgres_db=jfstat
-postgres_user=postgres
-postgres_password=Azerty007/
+    port_number=8181
+    time_zone=Africa/Algiers
+    appdata_path=/pg/appdata/jellystat
+    version_tag=latest
+    postgres_version=15
+    postgres_db=jfstat
+    postgres_user=postgres
+    postgres_password=Azerty007/
+    jwt_secret=a4d835678237414cb744b388943c0ab5
+    js_base_url=/
+    expose=
 }
 
 # ================================ CONTAINER DEPLOYMENT ================================ #
 deploy_container() {
 
 create_docker_compose() {
-    # Initialise les variables par défaut
-    default_variables
-
-    # Crée le fichier docker-compose.yml
     cat << EOF > /pg/ymals/${app_name}/docker-compose.yml
 services:
   ${app_name}-db:
@@ -48,11 +36,11 @@ services:
       - plexguide
 
   ${app_name}:
-    image: cyfershepard/jellystat:${jellystat_version}
+    image: cyfershepard/jellystat:${version_tag}
     container_name: ${app_name}
     restart: unless-stopped
     ports:
-      - "${host_port}:${internal_port}"
+      - ${expose}${port_number}:3000
     environment:
       POSTGRES_DB: ${postgres_db}
       POSTGRES_USER: ${postgres_user}
@@ -61,7 +49,7 @@ services:
       POSTGRES_PORT: 5432
       JWT_SECRET: ${jwt_secret}
       TZ: ${time_zone}
-      JS_BASE_URL: /
+      JS_BASE_URL: ${js_base_url}
     volumes:
       - ${appdata_path}/backup-/app/backend/backup-data
     depends_on:
@@ -71,7 +59,7 @@ services:
       - 'traefik.http.routers.${app_name}.rule=Host("js.${traefik_domain}")'
       - 'traefik.http.routers.${app_name}.entrypoints=websecure'
       - 'traefik.http.routers.${app_name}.tls.certresolver=mytlschallenge'
-      - 'traefik.http.services.${app_name}.loadbalancer.server.port=${internal_port}'
+      - 'traefik.http.services.${app_name}.loadbalancer.server.port=3000'
     networks:
       - plexguide
 
@@ -81,8 +69,6 @@ networks:
 EOF
 }
 
-# Appelle la fonction pour créer le fichier
-create_docker_compose
 }
 
 # ================================ MENU GENERATION ================================ #
@@ -91,6 +77,3 @@ create_docker_compose
 
 # ================================ EXTRA FUNCTIONS ================================ #
 # NOTE: Extra Functions for Script Organization
-
-# Pour exécuter le déploiement, vous pouvez appeler la fonction deploy_container() ici
-# deploy_container
