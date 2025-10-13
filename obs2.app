@@ -1,23 +1,25 @@
 #!/bin/bash
 
-# ================================ DEFAULT VALUES ==============================
+# ================================ DEFAULT VALUES ================================ #
 
 default_variables() {
-    port_number=3001
-    time_zone=Africa/Algiers
-    appdata_path=/pg/appdata/obsidian
-    tv_path=/mnt/30/media/tv
-    media_path=/mnt/30/media
-    eight_t_path=/mnt/8t  # Changed from 8t_path to eight_t_path
-    clientdownload_path=/mnt/15/download
-    version_tag=latest
-    
+port_number=3001
+port_number_alt=3000
+time_zone=Africa/Algiers
+appdata_path=/pg/appdata/obsidian
+tv_path=/mnt/30/media/tv
+media_path=/mnt/30/media
+eight_t_path=/mnt/8t
+clientdownload_path=/mnt/15/download
+version_tag=latest
+expose=
 }
 
-# ================================ CONTAINER DEPLOYMENT ========================
+# ================================ CONTAINER DEPLOYMENT ================================ #
+deploy_container() {
 
 create_docker_compose() {
-    cat << 'EOF' > /pg/ymals/${app_name}/docker-compose.yml
+    cat << EOF > /pg/ymals/${app_name}/docker-compose.yml
 services:
   ${app_name}:
     image: lscr.io/linuxserver/obsidian:${version_tag}
@@ -26,14 +28,15 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=${time_zone}
+    ports:
+      - "${expose}${port_number_alt}:3000"
+      - "${expose}${port_number}:3001"
     volumes:
       - ${appdata_path}:/config
       - ${tv_path}:/tv
       - ${eight_t_path}:/8t
       - ${media_path}:/media
       - ${clientdownload_path}:/downloads
-    ports:
-      - "${expose}${port_number}:3001"
     shm_size: "2gb"
     restart: unless-stopped
     labels:
@@ -53,9 +56,9 @@ EOF
 
 }
 
-# ================================ MENU GENERATION ============================>
-# NOTE: List menu options in order of appears and place a this for naming #### >
+# ================================ MENU GENERATION ================================ #
+# NOTE: List menu options in order of appears and place a this for naming #### Item Title
 
 
-# ================================ EXTRA FUNCTIONS ============================>
+# ================================ EXTRA FUNCTIONS ================================ #
 # NOTE: Extra Functions for Script Organization
