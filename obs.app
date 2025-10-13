@@ -20,7 +20,7 @@ deploy_container() {
 create_docker_compose() {
     cat << EOF > /pg/ymals/${app_name}/docker-compose.yml
 services:
- ${app_name}:
+  ${app_name}:
     image: lscr.io/linuxserver/obsidian:${version_tag}
     container_name: ${app_name}
     environment:
