@@ -1,20 +1,16 @@
 #!/bin/bash
 
-# ================================ DEFAULT VALUES =============================>
+# ================================ DEFAULT VALUES ================================ #
 
 default_variables() {
-port_number=3001
+port_number=7474
 time_zone=Africa/Algiers
 appdata_path=/pg/appdata/obs
-tv_path=/mnt/30/media/tv
-media_path=/mnt/30/media
-t8_path=/mnt/8t
-clientdownload_path=/mnt/15/download
 version_tag=latest
 expose=
 }
 
-# ================================ CONTAINER DEPLOYMENT =======================>
+# ================================ CONTAINER DEPLOYMENT ================================ #
 deploy_container() {
 
 create_docker_compose() {
@@ -29,20 +25,15 @@ services:
       - TZ=${time_zone}
     volumes:
       - ${appdata_path}:/config
-      - ${tv_path}:/tv
-      - ${t8_path}:/8t
-      - ${media_path}:/media
-      - ${clientdownload_path}:/downloads
     ports:
-      - "${expose}${port_number}:3001"
-    shm_size: "2gb"
+      - ${expose}${port_number}:3001
     restart: unless-stopped
     labels:
       - 'traefik.enable=true'
-      - 'traefik.http.routers.${app_name}.rule=Host("${app_name}.${traefik_doma>
+      - 'traefik.http.routers.${app_name}.rule=Host("${app_name}.${traefik_domain}")'
       - 'traefik.http.routers.${app_name}.entrypoints=websecure'
       - 'traefik.http.routers.${app_name}.tls.certresolver=mytlschallenge'
-      - 'traefik.http.services.${app_name}.loadbalancer.server.port=${port_numb>
+      - 'traefik.http.services.${app_name}.loadbalancer.server.port=${port_number}'
     networks:
       - plexguide
 
@@ -54,9 +45,9 @@ EOF
 
 }
 
-# ================================ MENU GENERATION ============================>
-# NOTE: List menu options in order of appears and place a this for naming #### >
+# ================================ MENU GENERATION ================================ #
+# NOTE: List menu options in order of appears and place a this for naming #### Item Title
 
 
-# ================================ EXTRA FUNCTIONS ============================>
+# ================================ EXTRA FUNCTIONS ================================ #
 # NOTE: Extra Functions for Script Organization
