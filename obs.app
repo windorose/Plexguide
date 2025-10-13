@@ -26,7 +26,7 @@ services:
     volumes:
       - ${appdata_path}:/config
     ports:
-      - ${expose}${port_number}:3001
+      - ${expose}${port_number}:80
     restart: unless-stopped
     labels:
       - 'traefik.enable=true'
