@@ -5,10 +5,10 @@
 default_variables() {
 port_number=3001
 time_zone=Africa/Algiers
-appdata_path=/pg/appdata/obsidian
+appdata_path=/pg/appdata/obs
 tv_path=/mnt/30/media/tv
 media_path=/mnt/30/media
-8t_path=/mnt/8t
+t8_path=/mnt/8t
 clientdownload_path=/mnt/15/download
 version_tag=latest
 expose=
@@ -30,7 +30,7 @@ services:
     volumes:
       - ${appdata_path}:/config
       - ${tv_path}:/tv
-      - ${8t_path}:/8t
+      - ${t8_path}:/8t
       - ${media_path}:/media
       - ${clientdownload_path}:/downloads
     ports:
