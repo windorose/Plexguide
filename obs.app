@@ -3,9 +3,14 @@
 # ================================ DEFAULT VALUES ================================ #
 
 default_variables() {
-port_number=7474
+port_number=3001
+port_number_alt=3000
 time_zone=Africa/Algiers
-appdata_path=/pg/appdata/obs
+appdata_path=/pg/appdata/obsidian
+tv_path=/mnt/30/media/tv
+media_path=/mnt/30/media
+eight_t_path=/mnt/8t
+clientdownload_path=/mnt/15/download
 version_tag=latest
 expose=
 }
@@ -23,10 +28,16 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=${time_zone}
+    ports:
+      - "${expose}${port_number_alt}:3000"
+      - "${expose}${port_number}:3001"
     volumes:
       - ${appdata_path}:/config
-    ports:
-      - ${expose}${port_number}:80
+      - ${tv_path}:/tv
+      - ${eight_t_path}:/8t
+      - ${media_path}:/media
+      - ${clientdownload_path}:/downloads
+    shm_size: "2gb"
     restart: unless-stopped
     labels:
       - 'traefik.enable=true'
