@@ -1,0 +1,85 @@
+#!/bin/bash
+
+# ================================ DEFAULT VALUES ================================ #
+
+default_variables() {
+# Web Interface Port
+port_number=8080
+time_zone=Africa/Algiers
+version_tag=latest
+expose=
+
+# Paths
+appdata_path=/pg/appdata/joomla
+db_path=/pg/appdata/joomla_db
+
+# Database Configuration (Change these for security)
+db_name=joomla_db
+db_user=windo
+db_password=Azertyui007/
+db_root_password=Azertyui007/
+}
+
+# ================================ CONTAINER DEPLOYMENT ================================ #
+deploy_container() {
+
+create_docker_compose() {
+    cat << EOF > /pg/ymals/${app_name}/docker-compose.yml
+services:
+  # Database Service (Required for Joomla)
+  ${app_name}_db:
+    image: mysql:8.0
+    container_name: ${app_name}_db
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      - MYSQL_ROOT_PASSWORD=${db_root_password}
+      - MYSQL_DATABASE=${db_name}
+      - MYSQL_USER=${db_user}
+      - MYSQL_PASSWORD=${db_password}
+    volumes:
+      - ${db_path}:/var/lib/mysql
+    restart: unless-stopped
+    networks:
+      - plexguide
+
+  # Joomla Service
+  ${app_name}:
+    image: joomla:${version_tag}
+    container_name: ${app_name}
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${time_zone}
+      - JOOMLA_DB_HOST=${app_name}_db
+      - JOOMLA_DB_USER=${db_user}
+      - JOOMLA_DB_PASSWORD=${db_password}
+      - JOOMLA_DB_NAME=${db_name}
+    ports:
+      - "${expose}${port_number}:80"
+    volumes:
+      - ${appdata_path}:/var/www/html
+    restart: unless-stopped
+    depends_on:
+      - ${app_name}_db
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.${app_name}.rule=Host("joomla.${traefik_domain}")'
+      - 'traefik.http.routers.${app_name}.entrypoints=websecure'
+      - 'traefik.http.routers.${app_name}.tls.certresolver=mytlschallenge'
+      - 'traefik.http.services.${app_name}.loadbalancer.server.port=80'
+    networks:
+      - plexguide
+
+networks:
+  plexguide:
+    external: true
+EOF
+}
+
+}
+
+# ================================ MENU GENERATION ================================ #
+# NOTE: List menu options in order of appears and place a this for naming #### Item Title
+
+
+# ================================ EXTRA FUNCTIONS ================================ #
